@@ -1,11 +1,18 @@
 import { Routes, Route } from "react-router-dom";
-import { Home, Login, NotFound } from "./routes";
+import { Home, Login, NotFound, Register } from "./routes";
 import { Navbar } from "./components";
 import RequireAuth from "./components/RequireAuth";
+import { useContext } from "react";
+import { UserContext } from "./context/UserProvider";
 
 
 const App = () => {
 
+  const { user } = useContext(UserContext);
+
+  if (!user) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -22,6 +29,10 @@ const App = () => {
         <Route
           path="/login"
           element={<Login />}
+        />
+        <Route
+          path="/register"
+          element={<Register />}
         />
         <Route
           path="*"
