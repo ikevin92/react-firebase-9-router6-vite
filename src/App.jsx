@@ -10,7 +10,7 @@ const App = () => {
 
   const { user } = useContext(UserContext);
 
-  if (!user) {
+  if (user === false) {
     return <p>Loading...</p>;
   }
 
