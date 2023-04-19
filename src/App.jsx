@@ -17,6 +17,7 @@ const App = () => {
   return (
     <>
       <Navbar />
+      <h1>APP</h1>
       <Routes>
         <Route
           path="/"

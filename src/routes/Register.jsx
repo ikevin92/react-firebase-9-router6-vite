@@ -1,20 +1,23 @@
 import { useContext } from "react";
-import { UserContext } from "../context/UserProvider";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { getErrorMessageFromFirebaseError } from "../helpers";
+import { useNavigate } from "react-router-dom";
+import { FormError, FormInput } from "../components";
+import { UserContext } from "../context/UserProvider";
+import { erroresFirebase, formValidate } from "../utils";
 
 const Register = () => {
 
-  const { registerUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const { registerUser } = useContext(UserContext);
+  const { required, patternEmail, minLength, validateTrim, validateEquals } =
+    formValidate();
 
   const {
-    register,
-    handleSubmit,
-    getValues,
-    setError,
     formState: { errors },
+    getValues,
+    handleSubmit,
+    register,
+    setError,
   } = useForm({
     defaultValues: {
       email: "kevin@test.com",
@@ -23,80 +26,54 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const onSubmit = async ({ email, password }) => {
     try {
-      const { email, password } = data;
-      console.log(`🚀 ~ file: Register.jsx:30 ~ onSubmit ~ email, password :`, email, password);
-      const response = await registerUser({ email, password });
-      console.log(`🚀 ~ file: Register.jsx:32 ~ onSubmit ~ response:`, response);
-      navigate('/');
+      await registerUser({ email, password });
+      navigate("/");
     } catch (error) {
-      const message = getErrorMessageFromFirebaseError(error);
-      setError("root", {
-        type: "custom",
-        message
+      console.log(error.code);
+      setError("firebase", {
+        message: erroresFirebase(error.code),
       });
-      console.error('error registerUser', message);
-      return;
     }
   };
 
   return (
     <>
-      <h1>Register</h1>
+      <h1>User Register</h1>
+      <FormError error={errors.firebase} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
+        <FormInput
           type="email"
           placeholder="Ingrese email"
           {...register("email", {
-            required: {
-              value: true,
-              message: "Campo obligatorio",
-            },
-            pattern: {
-              value:
-                /[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})/,
-              message: "Formato de email incorrecto",
-            },
+            required,
+            pattern: patternEmail,
           })}
-        />
-        {errors.email && <p>{errors.email.message}</p>}
-        <input
+        >
+          <FormError error={errors.email} />
+        </FormInput>
+
+        <FormInput
           type="password"
-          placeholder="Ingrese password"
+          placeholder="Ingrese Password"
           {...register("password", {
-            setValueAs: (v) => v.trim(),
-            minLength: {
-              value: 6,
-              message: "El password debe tener al menos 6 caracteres"
-            },
-            validate: {
-              trim: (v) => {
-                if (!v.trim()) {
-                  return "No se permite espacios en blanco";
-                }
-                return true;
-              },
-            },
+            minLength,
+            validate: validateTrim,
           })}
-        />
-        {errors.password && <p>{errors.password.message}</p>}
-        <input
+        >
+          <FormError error={errors.password} />
+        </FormInput>
+
+        <FormInput
           type="password"
           placeholder="Ingrese Password"
           {...register("repassword", {
-            setValueAs: (v) => v.trim(),
-            validate: {
-              equals: (v) =>
-                v === getValues("password") || "No coinciden las contraseñas",
-            },
+            validate: validateEquals(getValues),
           })}
-        />
-        {errors.repassword && <p>{errors.repassword.message}</p>}
-
-        {errors.root && <p>{errors.root.message}</p>}
-
+        >
+          <FormError error={errors.repassword} />
+        </FormInput>
         <button type="submit">Register</button>
       </form>
     </>

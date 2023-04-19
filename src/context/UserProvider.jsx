@@ -1,7 +1,6 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
-import { useEffect } from "react";
 
 export const UserContext = createContext();
 
@@ -12,7 +11,6 @@ const UserProvider = ({ children }) => {
     const unSuscribe = onAuthStateChanged(auth, user => {
       if (user) {
         const { email, photoURL, displayName, uid } = user;
-        //TODO: navegar al home
         setUser({ email, photoURL, displayName, uid });
       } else {
         setUser(null);
