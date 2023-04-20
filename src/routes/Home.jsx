@@ -1,8 +1,13 @@
+import { ExampleRef } from "../components";
 
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <>
+      <h1>Home</h1>
+      <ExampleRef />
+    </>
   );
 };
+
 export default Home;
