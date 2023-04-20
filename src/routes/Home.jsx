@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, FormError, FormInput, Title } from "../components";
+import { Button, CardUrl, FormError, FormInput, Title } from "../components";
 import { useFirestore } from "../hooks";
 import { formValidate } from "../utils";
 
@@ -98,39 +98,30 @@ const Home = () => {
       </form>
 
       {data.map((item) => (
-        <div
-          key={item.nanoid}
-          className="p-6 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 mb-2"
-        >
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {pathURL}
-            {item.nanoid}
-          </h5>
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            {item.origin}
-          </p>
-          <div className="flex space-x-2">
-            <Button
-              type="button"
-              text="Delete"
-              color="red"
-              loading={loading[item.nanoid]}
-              onClick={() => handleClickDelete(item.nanoid)}
-            />
-            <Button
-              type="button"
-              text="Edit"
-              color="yellow"
-              onClick={() => handleClickEdit(item)}
-            />
-            <Button
-              type="button"
-              text={copy[item.nanoid] ? "Copied" : "Copy"}
-              color="blue"
-              onClick={() => handleClickCopy(item.nanoid)}
-            />
-          </div>
-        </div>
+        <CardUrl key={item.nanoid} item={item} pathURL={pathURL}>
+          <Button
+            key="delete"
+            type="button"
+            text="Delete"
+            color="red"
+            loading={loading[item.nanoid]}
+            onClick={() => handleClickDelete(item.nanoid)}
+          />
+          <Button
+            key="edit"
+            type="button"
+            text="Edit"
+            color="yellow"
+            onClick={() => handleClickEdit(item)}
+          />
+          <Button
+            key="copy"
+            type="button"
+            text={copy[item.nanoid] ? "Copied" : "Copy"}
+            color="blue"
+            onClick={() => handleClickCopy(item.nanoid)}
+          />
+        </CardUrl>
       ))}
     </>
   );
