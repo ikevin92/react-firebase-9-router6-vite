@@ -1,8 +1,11 @@
+import { Title } from "../components";
 
 
 const NotFound = () => {
   return (
-    <div>NotFound</div>
-  );
+    <>
+      <Title text="404" />
+    </>);
 };
+
 export default NotFound;
