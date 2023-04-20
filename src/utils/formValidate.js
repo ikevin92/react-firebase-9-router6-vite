@@ -1,4 +1,3 @@
-
 export const formValidate = (getValues) => {
   return {
     required: {
@@ -11,7 +10,7 @@ export const formValidate = (getValues) => {
     },
     minLength: {
       value: 6,
-      message: "Mínimo 6 caracteres",
+      message: "Mínimo 6 carácteres",
     },
     validateTrim: {
       trim: (v) => {
@@ -21,11 +20,9 @@ export const formValidate = (getValues) => {
         return true;
       },
     },
-    validateEquals(getValues) {
+    validateEquals(value) {
       return {
-        equals: (v) =>
-          v === getValues("password") ||
-          "No coinciden las contraseñas",
+        equals: (v) => v === value || "No coinciden las contraseñas",
       };
     },
   };
