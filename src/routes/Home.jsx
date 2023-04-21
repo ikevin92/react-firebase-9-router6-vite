@@ -21,7 +21,6 @@ const Home = () => {
   const [newOriginID, setNewOriginID] = useState();
 
   useEffect(() => {
-    console.log("getData");
     getData();
   }, []);
 
@@ -59,7 +58,6 @@ const Home = () => {
 
   const handleClickCopy = async (nanoid) => {
     await navigator.clipboard.writeText(window.location.href + nanoid);
-    console.log("copiado");
     setCopy({ [nanoid]: true });
   };
 
